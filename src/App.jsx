@@ -1,6 +1,8 @@
 import { useState } from "react"
 import Header from "./components/Header"
 import UserInput from "./components/UserInput"
+import Results from "./components/Results"
+import { calculateInvestmentResults } from "./util/investment"
 
 const inputNames = [
   "initialInvestment",
@@ -11,27 +13,30 @@ const inputNames = [
 
 function App() {
   const [userInputs, setUserInputs] = useState({
-    initialInvestment: 0,
-    annualInvestment: 0,
-    expectedReturn: 0,
-    duration: 0
+    initialInvestment: 10000,
+    annualInvestment: 1200,
+    expectedReturn: 6,
+    duration: 10
   })
+  const results = calculateInvestmentResults(userInputs)
 
-  function handleUserInput(event) {
-    const { name, value } = event.target
+  function handleUserInput(identifier, value) {
     setUserInputs(oldInputs => {
-      return {
+      const newInputs = {
         ...oldInputs,
-        [name]: value
+        [identifier]: parseInt(value)
       }
+      console.log(newInputs)
+      return newInputs
     })
   }
 
   return (
-    <div>
+    <>
       <Header />
-      <UserInput inputNames={inputNames} onUserInput={handleUserInput} />
-    </div>
+      <UserInput userInputs={userInputs} onUserInput={handleUserInput} />
+      <Results data={results} />
+    </>
   )
 }
 
